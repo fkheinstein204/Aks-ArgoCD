@@ -10,10 +10,6 @@ variable "location" {
   default = "westeurope"
 }
 
-variable "subscription_id" {
-  type = string
-}
-
 variable "k8s_service_account_name" {
   type = string
 }
