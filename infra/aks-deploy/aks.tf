@@ -24,9 +24,7 @@ resource "azurerm_kubernetes_cluster" "main" {
     zones                       = ["1", "2", "3"] # Multi-AZ support
   }
 
-  #identity {
-  #  type = "SystemAssigned"
-  #}
+
 
   identity {
     type         = "UserAssigned"
