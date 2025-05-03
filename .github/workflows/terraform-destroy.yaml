@@ -1,9 +1,6 @@
-name: Terraform-Plan
+name: Terraform-Destroy
 
 on:
-  push:
-    branches:
-      - main
 
   workflow_call:
     inputs:
@@ -12,17 +9,6 @@ on:
         type: string
         default: 'dev'
         required: true
-      working_directory:
-        type: string
-        required: true
-      terraform_version:
-        type: string
-        required: false
-        default: '1.5.7'
-      suffix:
-        type: string
-        required: false
-        default: ''
 
 env:
   TERRAFORM_WORKING_DIRECTORY: "infra/aks-deploy"
@@ -31,7 +17,7 @@ env:
 
 jobs:
 
-  plan:
+  terraform-destroy:
     runs-on: ubuntu-latest
 
     environment:
@@ -46,8 +32,8 @@ jobs:
       with:
         terraform_version: ${{ inputs.terraform_version }}
 
-    - id: plan
-      name: Terraform Plan
+    - id: destroy
+      name: Terraform Destroy
       env:
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
@@ -58,11 +44,10 @@ jobs:
       working-directory: ${{ env.TERRAFORM_WORKING_DIRECTORY }}
       run: |
 
-        pwd
         terraform init \
           -backend-config="resource_group_name=${{ vars.BACKEND_RESOURCE_GROUP_NAME }}" \
           -backend-config="storage_account_name=${{ vars.BACKEND_STORAGE_ACCOUNT_NAME }}" \
           -backend-config="container_name=${{ vars.BACKEND_STORAGE_CONTAINER_NAME }}" \
           -backend-config="key=${{ env.APPLICATION_NAME }}-${{ env.ENVIRONMENT_NAME }}${{ inputs.suffix }}"
 
-        terraform plan
+        terraform destroy -auto-approve

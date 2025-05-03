@@ -1,9 +1,7 @@
-name: Terraform-Plan
+name: Terraform-Apply
 
 on:
-  push:
-    branches:
-      - main
+
 
   workflow_call:
     inputs:
@@ -31,7 +29,7 @@ env:
 
 jobs:
 
-  plan:
+  apply:
     runs-on: ubuntu-latest
 
     environment:
@@ -46,8 +44,8 @@ jobs:
       with:
         terraform_version: ${{ inputs.terraform_version }}
 
-    - id: plan
-      name: Terraform Plan
+    - id: apply
+      name: Terraform Apply
       env:
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
@@ -65,4 +63,4 @@ jobs:
           -backend-config="container_name=${{ vars.BACKEND_STORAGE_CONTAINER_NAME }}" \
           -backend-config="key=${{ env.APPLICATION_NAME }}-${{ env.ENVIRONMENT_NAME }}${{ inputs.suffix }}"
 
-        terraform plan
+        terraform apply -auto-approve
