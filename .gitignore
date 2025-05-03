@@ -35,3 +35,6 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+infra/aks-deploy/.terraform.lock.hcl
+infra/backend/.terraform.lock.hcl
+infra/backend/main.tfplan
